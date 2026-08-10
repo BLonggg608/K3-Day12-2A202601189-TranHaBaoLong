@@ -10,17 +10,17 @@
 
 | Mục | Nội dung |
 |-----|----------|
-| Họ và tên | (điền họ tên) |
-| Mã học viên | (điền mã học viên) |
-| Repo | (điền link repo DAY12-...) |
+| Họ và tên | Trần Hà Bảo Long |
+| Mã học viên | 2A202601189 |
+| Repo | https://github.com/BLonggg608/K3-Day12-2A202601189-TranHaBaoLong |
 
 ## Service
 
 | Mục | Nội dung |
 |-----|----------|
-| Public URL | https://TODO-thay-bang-url-that.up.railway.app |
-| Platform | Railway / Render / Cloud Run — (điền platform bạn dùng) |
-| Ngày deploy | (điền ngày) |
+| Public URL | https://day12-agent-production-3a22.up.railway.app/ |
+| Platform | Railway |
+| Ngày deploy | 10/08/2026 |
 
 ## Biến Môi Trường Đã Set Trên Cloud
 
@@ -41,18 +41,18 @@ Thay `<URL>` bằng Public URL ở trên:
 
 ```bash
 # 1. Liveness — mong đợi 200 {"status":"ok"}
-curl -i <URL>/health
+curl -i https://day12-agent-production-3a22.up.railway.app/health
 
 # 2. Readiness — mong đợi 200 {"status":"ready"} (đã nối được Redis)
-curl -i <URL>/ready
+curl -i https://day12-agent-production-3a22.up.railway.app/ready
 
 # 3. Không có API key — mong đợi 401
-curl -i -X POST <URL>/ask \
+curl -i -X POST https://day12-agent-production-3a22.up.railway.app/ask \
   -H "Content-Type: application/json" \
   -d '{"question":"Hello"}'
 
 # 4. Có API key — mong đợi 200 kèm câu trả lời
-curl -i -X POST <URL>/ask \
+curl -i -X POST https://day12-agent-production-3a22.up.railway.app/ask \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $AGENT_API_KEY" \
   -H "X-User-Id: sv-test" \
@@ -60,7 +60,7 @@ curl -i -X POST <URL>/ask \
 
 # 5. Rate limit — gọi 15 lần, những lần cuối phải trả 429
 for i in $(seq 1 15); do
-  curl -s -o /dev/null -w "%{http_code} " -X POST <URL>/ask \
+  curl -s -o /dev/null -w "%{http_code} " -X POST https://day12-agent-production-3a22.up.railway.app/ask \
     -H "Content-Type: application/json" \
     -H "X-API-Key: $AGENT_API_KEY" \
     -H "X-User-Id: sv-test" \
@@ -73,7 +73,57 @@ done; echo
 Dán output của các lệnh trên vào đây:
 
 ```
-(điền output)
+# 1. Liveness — mong đợi 200 {"status":"ok"}
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 10 Aug 2026 04:16:52 GMT
+Server: railway-hikari
+x-railway-request-id: pzdyaM7nScezZ3pKAXC71g
+Content-Length: 57
+x-hikari-trace: sin1.d1nj
+x-railway-edge: sin1
+Connection: keep-alive
+
+{"status":"ok","service":"day12-agent","version":"1.0.0"}
+
+# 2. Readiness — mong đợi 200 {"status":"ready"} (đã nối được Redis)
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 10 Aug 2026 04:17:16 GMT
+Server: railway-hikari
+x-railway-request-id: aUYY9hSaSvOdK-t8VOLIQQ
+Content-Length: 31
+x-hikari-trace: sin1.hs0s
+x-railway-edge: sin1
+Connection: keep-alive
+
+{"status":"ready","redis":true}
+
+# 3. Không có API key — mong đợi 401
+HTTP/2 401 
+content-type: application/json
+date: Mon, 10 Aug 2026 04:18:02 GMT
+server: railway-hikari
+x-railway-request-id: kr3yYdEjSd-otrUcmrpb1w
+content-length: 39
+x-hikari-trace: sin1.nzn2
+x-railway-edge: sin1
+
+# 4. Có API key — mong đợi 200 kèm câu trả lời
+HTTP/2 200 
+content-type: application/json
+date: Mon, 10 Aug 2026 04:19:10 GMT
+server: railway-hikari
+x-railway-request-id: dJkp3gQnSOWnzsgIDcO5xA
+content-length: 279
+x-hikari-trace: sin1.nzn2
+x-railway-edge: sin1
+vary: accept-encoding
+
+{"answer":"Câu hỏi hay. Deploy là gì thường được giải quyết bằng cách chuẩn hóa môi trường chạy: cùng một image chạy giống nhau ở laptop và trên cloud.","user_id":"sv-test","history_length":0,"cost_usd":2.145e-05,"tokens":{"in":3,"out":35}}
+
+# 5. Rate limit — gọi 15 lần, những lần cuối phải trả 429
+200 200 200 200 200 200 200 200 200 200 429 429 429 429 429
 ```
 
 ## Ảnh Chụp Màn Hình
