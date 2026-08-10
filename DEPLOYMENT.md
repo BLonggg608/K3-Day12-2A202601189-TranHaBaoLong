@@ -30,14 +30,14 @@ Ghi tên biến và **nguồn giá trị**, không ghi giá trị:
 |------|--------|---------|
 | `PORT` | ✅ | platform tự gán |
 | `AGENT_API_KEY` | ✅ | đặt trong dashboard, không nằm trong repo |
-| `REDIS_URL` | ✅ | (điền: Redis add-on của platform / Upstash / ...) |
+| `REDIS_URL` | ✅ | Railway Redis service |
 | `RATE_LIMIT_PER_MINUTE` | ✅ | 10 |
 | `MONTHLY_BUDGET_USD` | ✅ | 10.0 |
 | `LOG_LEVEL` | ✅ | INFO |
 
 ## Lệnh Kiểm Tra
 
-Thay `<URL>` bằng Public URL ở trên:
+Thay `https://day12-agent-production-3a22.up.railway.app` bằng Public URL ở trên:
 
 ```bash
 # 1. Liveness — mong đợi 200 {"status":"ok"}
@@ -147,5 +147,5 @@ Không đăng ký được tài khoản cloud? Vẫn nộp được bài, nhưng
 5. Ghi rõ lý do không deploy được vào phần dưới đây:
 
 ```
-(điền lý do nếu dùng phương án dự phòng, ngược lại xóa mục này)
+tôi đã deploy thành công trên Railway, không cần phương án dự phòng.
 ```
